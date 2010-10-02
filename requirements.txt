@@ -1,0 +1,4 @@
+transmissionrpc
+feedparser
+sqlite3
+-e git+http://github.com/dbr/tvdb_api.git#egg=tvdb_api
