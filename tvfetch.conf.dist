@@ -1,0 +1,72 @@
+# Configuration for tvfetch-0.1
+
+# Add custom sections to settings for your different shows. You can use the
+# [globals] section to define default settings that apply to all shows.
+# 
+# Valid settings are as follows:
+#
+# name:               The name of the show. Defaults to the section name.
+#
+# destination         Specify where to save the file once downloading has finished. This setting is 
+#                     required. Specify a full path, including the file name, but not the extension 
+#                     (extension will be automatically added). Any misssing directories in this path 
+#                     will be created upon download.  This setting follows python string format rules.
+#                     You will need to use format keys to specify how the file should be saved. For 
+#                     example, the following setting: "/videos/%(show_name)s/%(season)s-%(episode)s" 
+#                     would result in a file being saved as: /videos/My Show/5-3.avi (the file 
+#                     extension is automatically added).  
+#
+#                     Valid format keys are:
+#
+#                     %(show_name)s - the name of the show as specified in the "name" setting.
+#                     %(season)s - the season number of the episode.
+#                     %(episode)s - the episode number
+#                     %(title)s - the title of the episode
+#
+#                     See http://docs.python.org/library/stdtypes.html#string-formatting for more 
+#                     details on string formatting.
+#
+# quality:            The "quality" of a show when searching. Examples are: HDTV, DSR, 720p, etc. 
+#                     Default is "HDTV".
+#
+# seed_ratio:         When the torrent finishes downloading, it will continue seeding for other 
+#                     downloaders.  Bittorrent etiquitte dictates that you seed at least 100%. After 
+#                     seeding is complete, the torrent will be removed and any remaining files that 
+#                     have not been relocated will be deleted. The default for this setting is 1 (100%).
+#
+# start_season:       Prevent episodes from older seasons from being downloaded. Only episodes on or 
+#                     following the specified season will be downloaded.
+#             
+# start_episode:      Prevent older episodes from being downloaded. Only episodes on or following the 
+#                     specified one will be downloaded.
+#
+# exclude_extensions: Comma-separated list of extensions (without the ".") to skip when searching for 
+#                     torrents. Torrents with files matching these extensions will not be selected for download.
+#
+# max_concurrent:     Maximum number concurrent torrents to download (not including seeding). The 
+#                     default setting is 2 concurrent downloads.
+# 
+# log_level:          One of debug, info, warning, error, critical. Defaults to "info". Note: this can
+#                     only be used in the [globals] section.
+#
+
+# If you need to set transmission-specific settings, uncomment the following 
+# section. Default behavior is to use localhost:9095 without authentication
+# 
+#[transmission]
+#host: "localhost"
+#port: "9091"
+#user: "user"
+#password: "secret"
+
+
+## Example config:
+#
+# [globals]
+# quality: "HDTV"
+# exclude_extensions: "rar"
+# destination: /home/me/videos/TV/%(show_name)s/Season %(season)s/Episode %(episode)s - %(title)s
+#
+# [Dexter]
+# start_season: 5
+# start_episode: 3
