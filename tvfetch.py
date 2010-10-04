@@ -233,7 +233,8 @@ def main():
             entries += sorted(feed['entries'], key=ordkey)
             eps = [_parse_summary(e['summary'])['episode'] for e in entries]
             log.debug('   Found episodes: %s' % [int(s) for s in set(eps)])
-            
+        
+        added = 0
         for entry in entries:
             if count >= max_concurrent:
                 log.info('Reached maximum concurrent torrents (%d) for this show "%s".' % (max_concurrent, cfg_name))
@@ -308,6 +309,7 @@ def main():
                 continue
                 
             # Add the show
+            added += 1
             log.info('Adding %(show_name)s-%(season)s-%(episode)s to transmission queue' % info)
             log.debug(link)
             try:
@@ -334,7 +336,7 @@ def main():
             db.commit()
             count += 1
 
-        else:
+        if added == 0:
             log.info('No new episodes found for %s' % show['name'])
             
     log.debug('Checking for completed shows')
