@@ -420,7 +420,13 @@ def main():
 
                 for file in files:
                     log.debug('Deleted %s' % file)
-                    os.remove(os.path.join(download_dir, file))
+                    import ipdb; ipdb.set_trace()
+                    try:
+                        os.remove(os.path.join(download_dir, file))
+                    except OSError as e:
+                        if e.errno != errno.ENOENT:
+                            #if it's alread deleted, we don't care
+                            raise
 
                 for dir in dirs:
                     log.debug('Deleted %s' % dir)
