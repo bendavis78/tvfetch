@@ -386,7 +386,6 @@ class TvFetch(object):
 
                     for file in files:
                         log.debug('Deleted %s' % file)
-                        import ipdb; ipdb.set_trace()
                         try:
                             os.remove(os.path.join(download_dir, file))
                         except OSError as e:
