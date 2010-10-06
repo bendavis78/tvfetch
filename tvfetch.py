@@ -104,7 +104,10 @@ class Config(object):
 
 
 class TvFetch(object):
-    def __init__(self):
+    def __init__(self, debug=False):
+        if debug:
+            log_level = LOG_LEVELS.get('debug')
+
         log.debug('Running...')
         # load coonfig
         try:
@@ -114,6 +117,10 @@ class TvFetch(object):
         
         # Set log level from config
         log_level = LOG_LEVELS.get(self.config.get('globals', 'log_level', 'info'))
+
+        if debug:
+            log_level = LOG_LEVELS.get('debug')
+
         log.setLevel(log_level)
 
         log.debug('Loaded config')
@@ -172,7 +179,7 @@ class TvFetch(object):
             #we need to figure out the end season for this show. Use tvdb.
             tvdb = tvdb_api.Tvdb()
             tvdb_show = tvdb[show['name']]
-            seasons = [s for n,s in tvdb_show.items() if n > 0]
+            seasons = [s for n,s in tvdb_show.items() if n > 0] #exclude season 0 (extras)
             num_seasons = len(seasons)
 
             # get last downloaded season from the database to see which season to start with.
@@ -327,7 +334,8 @@ class TvFetch(object):
                 if status == STATUS_INCOMPLETE and torrent.progress == 100:
                     # The largest file is likely the one we want.
                     file = sorted(torrent.files().values(), key=lambda f: f['size'], reverse=True)[0]['name']
-
+                    if not show_cfg.get('destination'):
+                        raise UserError('destination not found for show "%s"' % cfg_name)
                     # Move the file to its final destination
                     destination = show_cfg['destination'] % {
                         'show_name': show_name,
@@ -427,23 +435,22 @@ if __name__ == "__main__":
         make_option('--reset-show', action='store', type='string', help="Delete a show's download history", metavar="NAME"),
         make_option('--check-progress', action='store_const', const='check_progress', dest='action', help="Check progress of currently downloading episodes."),
         make_option('--find-new', action='store_const', const='find_new', dest='action', help="Check RSS feed for new episodes."),
+        make_option('-d','--debug', action='store_true', dest='debug', help='Enable debug output'),
     ]
     parser = OptionParser(option_list=option_list)
     options, args = parser.parse_args()
 
     try:
+        fetcher = TvFetch(debug=options.debug)
         if options.reset_show:
-            fetcher = TvFetch()
             fetcher.reset_show(options.reset_show)
             sys.exit(0)
 
         if options.action == 'check_progress':
-            fetcher = TvFetch()
             fetcher.check_progress()
             sys.exit(0)
 
         if options.action == 'find_new':
-            fetcher = TvFetch()
             fetcher.check_new()
             sys.exit(0)
 
