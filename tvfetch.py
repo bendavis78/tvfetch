@@ -172,7 +172,8 @@ class TvFetch(object):
             #we need to figure out the end season for this show. Use tvdb.
             tvdb = tvdb_api.Tvdb()
             tvdb_show = tvdb[show['name']]
-            num_seasons = len(tvdb_show.items())-1 #exclude season 0 (extras)
+            seasons = [s for n,s in tvdb_show.items() if n > 0]
+            num_seasons = len(seasons)
 
             # get last downloaded season from the database to see which season to start with.
             # if no downloads, use start_season
