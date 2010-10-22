@@ -53,7 +53,7 @@ log = logging.getLogger('%s_log' % NAME)
 log.setLevel(logging.INFO)
 
 # rotated log
-handler = handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=1024, backupCount=5)
+handler = handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=1048576, backupCount=5)
 
 handler.setFormatter(logging.Formatter(LOG_FORMAT, DATE_FORMAT))
 log.addHandler(handler)
@@ -250,7 +250,7 @@ class TvFetch(object):
                     except:
                         # If any that fails, we can't get the title, so...
                         pass
-                
+
                 # Get torrent file so that we can parse info out of it
                 log.debug('Decoding torrent...')
                 try:
@@ -365,7 +365,7 @@ class TvFetch(object):
                     status = STATUS_SEEDING
                     log.info('Saved %s-s%02de%02d to %s' % (show_name, season, episode, destination))
 
-                elif status == STATUS_INCOMPLETE and torrent.status=='stopped':
+                elif status == STATUS_INCOMPLETE and torrent.status=='stopped' and not show_cfg.get('paused'):
                     log.info('Resuming %s-s%02de%02d' % (show_name, season, episode))
                     self.trans_client.start(transid)
 
