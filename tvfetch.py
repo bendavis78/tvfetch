@@ -155,6 +155,9 @@ class TvFetch(object):
                 msg = dedent(msg)
                 raise UserError(msg)
             raise
+        except transmissionrpc.TransmissionError as e:
+            if "Connection refused" in str(e):
+                raise UserError("Could not connect to transmission")
 
     def check_new(self):
         #find our shows
