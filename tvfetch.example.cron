@@ -1,0 +1,4 @@
+# Check progress every minute
+* * * * * root /usr/local/bin/tvfetch.py --check-progress > /dev/null
+# Find new episodes every day at 4am
+0 4 * * * root /usr/local/bin/tvfetch.py --find-new > /dev/null
